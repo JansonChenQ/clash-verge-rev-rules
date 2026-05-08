@@ -84,6 +84,23 @@ const ruleProviders = {
 
 // 规则
 const rules = [
+  // =================== 👇 在这里插入你的自定义规则 👇 ===================
+  
+  // DOMAIN-SUFFIX: 匹配域名后缀（最常用，匹配 xxx.com 及其所有子域名）
+  "DOMAIN-SUFFIX,example.com,🌍 国外",
+  "DOMAIN-SUFFIX,notion.so,美国-自动", 
+
+  // DOMAIN-KEYWORD: 匹配域名中的关键字
+  "DOMAIN-KEYWORD,company-internal,DIRECT",
+
+  // DOMAIN: 精确匹配完整域名（不包含子域名）
+  "DOMAIN,www.specific-website.com,港台日新韩-自动",
+
+  // IP-CIDR: 匹配指定的 IP 段 (如果是内网IP，记得加上 no-resolve 防止触发 DNS 解析)
+  "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve",
+  "IP-CIDR,8.8.8.8/32,🌍 国外",
+
+  // =================== 👆 自定义规则结束 👆 ===================
   "RULE-SET,ai,👽 AI",
   "RULE-SET,github,📘 GitHub",
   "RULE-SET,telegram,🙋 Telegram",
@@ -110,7 +127,7 @@ function main(config) {
   const myStaticNode = {
     name: "🏠 静态住宅落地",
     type: "http",
-    server: "166.141.100.13",
+    server: "",
     port: 5782,
     username: "test",
     password: "12345678",
@@ -123,7 +140,7 @@ function main(config) {
   if (!config.proxies) {
     config.proxies = [];
   }
-  config.proxies.push(myStaticNode);
+  // config.proxies.push(myStaticNode);
 
   // 4. 修改 DNS 配置
   config["dns"] = dnsConfig;
@@ -131,12 +148,12 @@ function main(config) {
   // 5. 重新定义代理组
   config["proxy-groups"] = [
     // 住宅 IP 专用选择组
-    {
-      ...groupBaseOption,
-      name: "🔗 链式-住宅IP",
-      type: "url-test",
-      proxies: [myStaticNode.name], // 此时连接该节点会自动经过 entranceGroupName
-    },
+    // {
+    //   ...groupBaseOption,
+    //   name: "🔗 链式-住宅IP",
+    //   type: "url-test",
+    //   proxies: [myStaticNode.name], // 此时连接该节点会自动经过 entranceGroupName
+    // },
     {
       ...groupBaseAutoTest,
       name: "所有-自动",
@@ -146,12 +163,12 @@ function main(config) {
     },
     {
       ...groupBaseAutoTest,
-      name: "港台日新韩-自动",
+      name: "港台日新韩马-自动",
       type: "url-test",
       proxies: [],
       "include-all": true,
       filter:
-        "(广港|广台|广日|广新|广韩|广美|香港|HK|Hong Kong|🇭🇰|HongKong|台湾|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|新加坡|SG|坡|狮城|🇸🇬|Singapore|韩国|KR|首尔|春川|🇰🇷|Korea)",
+        "(广港|广台|广日|广新|广韩|广美|香港|HK|Hong Kong|🇭🇰|HongKong|台湾|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|新加坡|SG|坡|狮城|🇸🇬|Singapore|韩国|KR|首尔|春川|🇰🇷|Korea|马来)",
     },
     {
       ...groupBaseAutoTest,
@@ -205,6 +222,14 @@ function main(config) {
     },
     {
       ...groupBaseOption,
+      name: "新马-自动",
+      type: "url-test",
+      proxies: [],
+      "include-all": true,
+      filter: "(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|马来)",
+    },
+    {
+      ...groupBaseOption,
       name: "韩国-自动",
       type: "url-test",
       proxies: [],
@@ -233,33 +258,36 @@ function main(config) {
       ...groupBaseOption,
       name: "👽 AI",
       type: "select",
-      proxies: ["🔗 链式-住宅IP", "日新韩-自动", "美国-自动"],
+      proxies: [
+        // "🔗 链式-住宅IP", 
+        "日新韩-自动", 
+        "美国-自动"],
     },
     {
       ...groupBaseOption,
       name: "📘 GitHub",
       type: "select",
-      proxies: ["港台日新韩-自动", "日新韩-自动", "美国-自动"],
+      proxies: ["港台日新韩马-自动", "日新韩-自动", "美国-自动"],
     },
     {
       ...groupBaseOption,
       name: "🙋 Telegram",
       type: "select",
-      proxies: ["港台日新韩-自动", "日新韩-自动", "美国-自动"],
+      proxies: ["港台日新韩马-自动", "日新韩-自动", "美国-自动"],
     },
     {
       ...groupBaseOption,
       name: "📀 流媒体",
       type: "select",
-      proxies: ["港台日新韩-自动", "日新韩-自动", "美国-自动"],
+      proxies: ["港台日新韩马-自动", "日新韩-自动", "美国-自动"],
     },
     {
       ...groupBaseOption,
       name: "🌍 国外",
       type: "select",
       proxies: [
-        "🔗 链式-住宅IP",
-        "港台日新韩-自动",
+        // "🔗 链式-住宅IP",
+        "港台日新韩马-自动",
         "日新韩-自动",
         "美国-自动",
       ],
